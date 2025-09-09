@@ -1,0 +1,31 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.content {
+  background-color: #682747;
+  min-height: 700px;
+}
+
+.html {
+  scroll-behavior: smooth;
+}
+
+.parallax {
+  min-height: 350px;
+  background-image: url(https://kartinki.pics/uploads/posts/2021-07/thumbs/1625602953_1-kartinkin-com-p-terrariya-foni-biomov-krasivie-foni-1.png);
+  background-attachment: fixed;
+}
+
+.menu {
+  position: sticky;
+  width: 20%;
+  top: 20%;
+  margin-left: 10%;
+  margin-bottom: 10%;
+}
+
+.main {
+  margin-left: 30%;
+}/*# sourceMappingURL=style.css.map */
