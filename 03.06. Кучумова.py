@@ -92,16 +92,16 @@ class Library:
     def __init__(self):
         self._books = {}  
 
-    def __setitem__(self, title: str, author: str) -> None:
+    def __setitem__(self, title: str, author: str):
         self._books[title] = author
 
-    def __getitem__(self, title: str) -> str:
+    def __getitem__(self, title: str):
         return self._books.get(title, "Книга не найдена")
 
-    def __len__(self) -> int:
+    def __len__(self):
         return len(self._books)
 
-    def __call__(self) -> list:
+    def __call__(self):
         return list(self._books.keys())
 
 
