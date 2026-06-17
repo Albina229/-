@@ -1,0 +1,109 @@
+import tkinter as tk
+from tkinter import messagebox
+from datetime import datetime, timedelta
+
+
+# --- МОДЕЛЬ (НЕ МЕНЯЛАСЬ) ---
+class Visitor:
+    def __init__(self, vid, name, days):
+        self.id = vid
+        self.name = name
+        self.start_date = datetime.now()
+        self.end_date = self.start_date + timedelta(days=days)
+
+    def format_date(self, date):
+        return date.strftime("%d:%m:%Y")
+
+    def is_active(self):
+        return datetime.now() <= self.end_date
+
+
+# --- СИСТЕМА ---
+class GymSystem:
+    def __init__(self):
+        self.visitors = []
+        self.next_id = 1
+
+        self.root = tk.Tk()
+        self.root.title("SportLife - Admin Panel")
+        self.root.geometry("700x400")
+
+        # ===== ЛЕВАЯ ПАНЕЛЬ =====
+        self.left = tk.Frame(self.root)
+        self.left.pack(side="left", padx=10, pady=10)
+
+        tk.Label(self.left, text="Добавление посетителя").pack()
+
+        tk.Label(self.left, text="Имя").pack()
+        self.name_entry = tk.Entry(self.left)
+        self.name_entry.pack()
+
+        tk.Label(self.left, text="Срок (дни)").pack()
+        self.days_entry = tk.Entry(self.left)
+        self.days_entry.pack()
+
+        tk.Button(self.left, text="Добавить", command=self.add_visitor).pack(pady=5)
+        tk.Button(self.left, text="Поиск", command=self.search).pack(pady=5)
+        tk.Button(self.left, text="Обновить список", command=self.refresh).pack(pady=5)
+
+        # ===== ПРАВАЯ ПАНЕЛЬ =====
+        self.right = tk.Frame(self.root)
+        self.right.pack(side="right", fill="both", expand=True, padx=10, pady=10)
+
+        tk.Label(self.right, text="Список посетителей").pack()
+
+        self.listbox = tk.Listbox(self.right, width=50, height=20)
+        self.listbox.pack(fill="both", expand=True)
+
+    # --- ДОБАВЛЕНИЕ ---
+    def add_visitor(self):
+        try:
+            name = self.name_entry.get()
+            days = int(self.days_entry.get())
+
+            v = Visitor(self.next_id, name, days)
+            self.visitors.append(v)
+            self.next_id += 1
+
+            self.refresh()
+            messagebox.showinfo("OK", "Добавлено")
+
+        except:
+            messagebox.showerror("Ошибка", "Проверь ввод")
+
+    # --- ОБНОВЛЕНИЕ СПИСКА ---
+    def refresh(self):
+        self.listbox.delete(0, tk.END)
+
+        for v in self.visitors:
+            status = "Активен" if v.is_active() else "Истёк"
+
+            line = (
+                f"{v.id} | {v.name} | {status} | "
+                f"{v.format_date(v.end_date)}"
+            )
+
+            self.listbox.insert(tk.END, line)
+
+    # --- ПОИСК ---
+    def search(self):
+        query = self.name_entry.get().lower()
+
+        self.listbox.delete(0, tk.END)
+
+        found = [v for v in self.visitors if query in v.name.lower()]
+
+        for v in found:
+            status = "Активен" if v.is_active() else "Истёк"
+            self.listbox.insert(
+                tk.END,
+                f"{v.id} | {v.name} | {status}"
+            )
+
+    def run(self):
+        self.root.mainloop()
+
+
+# --- START ---
+app = GymSystem()
+app.run()
